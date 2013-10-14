@@ -24,7 +24,7 @@ Enter the virtual environment. Essentially, a virtualenv is a python sandbox. It
 
 Here are the steps to using virtual environments:
 
-1. Create an environment.
+1. Figure out how to create an environment. [Here's a hint](http://lmgtfy.com/?q=create+virtual+environment)
 This basically creates a copy of python and all of the essential modules and puts it in a directory of your choice. Creation of a virtual environment is _free_. This means you should make as many as you need, usually one per project. Each of your projects will have different requirements, so don't be stingy and try to use one env for all of them. The directory you put your environment in is usually named 'env' under the top level of your project.
 2. Activate your environment.
 Once an environment is created, you need to activate it. Unless you activate an environment, it simply sits there, sad and alone. But more importantly, unless you activate it, you'll continue to use the OS-specific versions of python and its modules.
@@ -329,7 +329,7 @@ This tells the browser where to send the form values when the user clicks submit
 
 The key for a value that is inputted by a user is stored on the html element as the name attribute. Whew. That was a mouthful. Just look at the following line:
 
-    <input type="text" name="github" />
+    <input type="text" name="student" />
 
 This html tag displays a text field for the user to type in. The 'name' attribute on the tag specifies the key that will be used for the value when the form is submitted. If that's unclear, try entering a value then submitting the form. Inspect the url request arguments on the next page. Go back, change the name attribute, submit again and inspect the url again and see how they've changed.
 
@@ -343,6 +343,7 @@ Well, our app works, but it's pretty brittle. If you leave the form empty and su
 Here are your tasks:
 
 1. On the get\_student handler, display a user's grades for all of their projects they've completed.
+# Jinja documentation
 2. On the same page, when you click on a project name, it brings you to a page listing all students and their grades for that particular project. You will need a new handler for this page.
 3. From _that_ page, when clicking on a student's github account, it sends you back to the get\_student handler.
 4. Make a pair of handlers that allows a user to create a new student record.
