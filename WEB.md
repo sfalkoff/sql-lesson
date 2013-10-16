@@ -4,7 +4,7 @@ A database is the last piece of technology we need before going online. In this 
 
 A State of Being
 ----------------
-A database introduces an important concept to our programs. Until now, our programshave had no long-term memory. That is to say, if you ran our calculator from earlier, quit it, then ran it again, it would run exactly the same as if it were run for the first time: two plus two will always be four. 
+A database introduces an important concept to our programs. Until now, our programs have had no long-term memory. That is to say, if you ran our calculator from earlier, quit it, then ran it again, it would run exactly the same as if it were run for the first time: two plus two will always be four. 
 
 The database changes all that. When we run our database-backed program, asking it for a student's grades will give different results over time as you add more data. This is called 'state', when the program reacts to input and responds differently. On top of that, the state is preserved when our program quits and restarts. This is called 'persistence'. Both of these things are provided by the database. 
 
@@ -142,6 +142,12 @@ A decorator 'decorates' a function. For now, we can consider a decorator to be a
 
 The name of the handler is mostly irrelevant for now. In flask, the return type of url handlers is a string. This fact will be important in a second.
 
+### Output to the Browser
+In all our previous programs, we could use the "print" command to output text to the screen.  For our web programs, printing to the screen doesn't make sense since the user can't see our screen - we want our output to go to the user's browser.
+
+To talk to the user's browser, our program and the browser need to be able to speak the same language: HTTP or Hypertext Transfer Protocol (that's why we put "http://" in front of all our web requests).  Fortunatly for us, Flask knows all about how to do that.  All we have to do it make sure our functions *return* the text we want to send to the browser and let Flask handle getting it there.
+
+
 ### Wiring Up Our Database
 Let's take a copy of our hackbright\_app.py file and put it in the same directory as our webapp.py. Take a moment to find a completed version. (There's probably a copy on your local machine, go ahead and use it, even if it's from another student. The 'find -n' command is helpful here.)
 
@@ -186,7 +192,7 @@ We now have a database-backed web application, that's all there is to it.
 
 Okay, fine.
 
-We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called the 'request arguments'. Are called the request arguments? Whatever.
+We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called the 'request arguments'. Are they called the request arguments? Whatever.
 
 The request arguments are a set of key/value pairs that the user can send to the web server on the other end via the url. An example url with request arguments would look like this:
 

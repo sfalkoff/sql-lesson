@@ -27,9 +27,14 @@ We define a table by declaring what the names of the columns are and what data t
 
 Right now, we've just created the table and it's empty. We need to **insert** data into it.
 
-    INSERT INTO Students VALUES ("Charles", "Ruhland", "cruhland");
+    INSERT INTO Students (first_name, last_name, github) VALUES ("Charles", "Ruhland", "cruhland");
 
 This inserts the first row into the table named 'Students', which we created above. Try inserting the second row yourself.
+
+If the VALUES in your insert statement exactly match the order and number of columns in the table definition, we can be lazy and leave that section off:
+
+    INSERT INTO Students VALUES ("Charles", "Ruhland", "cruhland");
+
 
 Step 2: Getting our data back
 -----------------------------
@@ -77,10 +82,37 @@ We'll create a table as before, with the following command:
 
 And again, we'll populate the table with some data with the 'INSERT' command:
 
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Markov", "Tweets generated from Markov chains", 50);
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Pyglet", "Object-oriented game programming using Pyglet", 100);
+
+
+Step 3b: Primary Keys
+---------------------
+Let's run one of those project insert statements again:
+
     INSERT INTO Projects VALUES ("Markov", "Tweets generated from Markov chains", 50);
-    INSERT INTO Projects VALUES ("Pyglet", "Object-oriented game programming using Pyglet", 100);
+
+Now run your SELECT to look at the Projects table.  Oh no!  A duplicate entry has been entered for the Markov project!  We probably didn't want that.  Why in the world did you listen to me when I told you to run that insert again?!
+
+No problem, we'll just delete that extra project.  DELETE works just like a SELECT, but without the column names.  The FROM and WHERE clauses are the same.  In fact, it's good practice to run a SELECT to see what rows your query matches before we run the delete.  
+
+Ok, so we just need to write a SELECT statement to find our extra row.  How the heck do we do that?  The data is the same in both rows.  Hmmm... badness.  If only we had a way to uniquly identify each row of our table.   It'd also be nice if the database would prevent us from duplicating ourselves.  Lucky for us, databases can do this with something called PRIMARY KEYs.
+
+If we identify a column in our table as a PRIMARY KEY column, the database will make sure that any data entered into this column is unqiue across all the rows of the table.  Numbers make really good primary keys and we can even let the database handle creating the keys for us.  If we add the AUTOINCREMENT keyword, the database will use the next available largest integer as the primary key for the table if we leave it out of our INSERT statement:
+
+  CREATE TABLE Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar(30), description TEXT, max_grade INT);
+
+You'll have to "DROP TABLE Projects" before you can recreate the table.  WARNING: DROP TABLE will delete the table and all your data!  Run with care!
+
+Now run the INSERTs again (leave off the new id column) and see what happens.
+
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Markov", "Tweets generated from Markov chains", 50);
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Pyglet", "Object-oriented game programming using Pyglet", 100);
+
+Now SELECT from the table and notice that each row has been assigned an id.
 
 Come up with three more projects and insert them into the table.
+
 
 Step 4: Advanced Querying
 -------------------------
@@ -164,7 +196,7 @@ Last, we need to select the project title and maximum grade from the 'Projects' 
 
 Now, we need _some_ way to mush all three queries together into a single query. That mechanism is called a JOIN. In rough terms, when we join two tables, we say that some column A in table 1 corresponds to some column B in table 2, and we should line them up. As an example, if we want to connect Students to Grades, we join _on_ the common column between them: the github column.
 
-    SELECT * FROM Students INNER JOIN Grades ON Students.github = Grades.student_github;
+    SELECT * FROM Students INNER JOIN Grades ON (Students.github = Grades.student_github);
 
 Notice now, the output shows the grades for a given Student on the same row as their first name. Next, we want to limit the columns. As we construct our query this time, we need to say which column comes out of which table. We use the dot notation for this:
 
@@ -176,29 +208,24 @@ Adding that restriction in, our query is getting hard to read, so we can split i
 
     SELECT Students.first_name, Students.last_name, 
            Grades.project_title, Grades.grade
-        FROM Students
-        INNER JOIN Grades
-        ON Students.github = Grades.student_github;
+    FROM Students
+    INNER JOIN Grades ON (Students.github = Grades.student_github);
 
 
 Next, we want to get the max\_grade out of the Projects table, as in Query 3. Again, we can stack joins on top of each other. In this case, the common data is in the 'title' column in the Projects table, and needs to be joined on the 'project\_title' column in the Grades table. First, we select everything to make sure it all lines up:
 
     SELECT *
-        FROM Students
-        INNER JOIN Grades
-        ON Students.github = Grades.student_github
-        INNER JOIN Projects
-        ON Grades.project_title = Projects.title;
+    FROM Students
+    INNER JOIN Grades ON (Students.github = Grades.student_github)
+    INNER JOIN Projects ON (Grades.project_title = Projects.title);
 
 We can add in a WHERE clause to show only the lines for the student with the github 'chriszf':
 
     SELECT *
-        FROM Students
-        INNER JOIN Grades
-        ON Students.github = Grades.student_github
-        INNER JOIN Projects
-        ON Grades.project_title = Projects.title
-        WHERE github = "chriszf";
+    FROM Students
+    INNER JOIN Grades ON (Students.github = Grades.student_github)
+    INNER JOIN Projects ON (Grades.project_title = Projects.title)
+    WHERE github = "chriszf";
 
 Now that everything looks good, we once again filter down to only the columns we want. For the final step, write the query that selects only the columns that match our example table above:
 
@@ -216,15 +243,13 @@ Try creating these two views to produce a report card 'table':
     CREATE VIEW GradesView AS
     SELECT Students.first_name, Students.last_name, Grades.project_title, Grades.grade
     FROM Students
-    INNER JOIN Grades
-    ON Students.github=Grades.student_github;
+    INNER JOIN Grades ON (Students.github=Grades.student_github);
 
     -- Join previous view with Projects to create nice looking "report card"
     CREATE VIEW ReportCardView AS
     SELECT GradesView.first_name, GradesView.last_name, Projects.title, GradesView.grade, Projects.max_grade
     FROM GradesView
-    INNER JOIN Projects
-    ON GradesView.project_title=Projects.title;
+    INNER JOIN Projects ON (GradesView.project_title=Projects.title);
 
 Now, we can use ReportCardView as if it were a regular table.
 
