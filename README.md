@@ -24,13 +24,13 @@ The first thing we need to do is be able to store our students. To do that, we c
 We define a table by declaring what the names of the columns are and what data type we can put into them. SQL data types largely map directly to standard Python data types. Here, the python 'string' datatype maps to the sql 'varchar' datatype. One quirk here is that we have to say explicitly up front the maximum length of every string we'll ever use. This is hard to predict, but it's harder to expand the field later to allow bigger strings, so we pick a reasonable, oversized default. Enter the following command in your sqlite console to create the table:
 
 ````sql
-    CREATE TABLE Students (first_name varchar(30), last_name varchar(30), github varchar(30));
+CREATE TABLE Students (first_name varchar(30), last_name varchar(30), github varchar(30));
 ````
 
 Right now, we've just created the table and it's empty. We need to **insert** data into it.
-
+````sql
     INSERT INTO Students (first_name, last_name, github) VALUES ("Charles", "Ruhland", "cruhland");
-
+````
 This inserts the first row into the table named 'Students', which we created above. Try inserting the second row yourself.
 
 If the VALUES in your insert statement exactly match the order and number of columns in the table definition, we can be lazy and leave that section off:
