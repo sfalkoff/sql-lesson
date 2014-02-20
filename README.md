@@ -22,8 +22,10 @@ The first thing we need to do is be able to store our students. To do that, we c
     Christian  | Fernandez | chriszf
 
 We define a table by declaring what the names of the columns are and what data type we can put into them. SQL data types largely map directly to standard Python data types. Here, the python 'string' datatype maps to the sql 'varchar' datatype. One quirk here is that we have to say explicitly up front the maximum length of every string we'll ever use. This is hard to predict, but it's harder to expand the field later to allow bigger strings, so we pick a reasonable, oversized default. Enter the following command in your sqlite console to create the table:
-    
+
+````sql
     CREATE TABLE Students (first_name varchar(30), last_name varchar(30), github varchar(30));
+````
 
 Right now, we've just created the table and it's empty. We need to **insert** data into it.
 
@@ -100,7 +102,7 @@ Ok, so we just need to write a SELECT statement to find our extra row.  How the 
 
 If we identify a column in our table as a PRIMARY KEY column, the database will make sure that any data entered into this column is unqiue across all the rows of the table.  Numbers make really good primary keys and we can even let the database handle creating the keys for us.  If we add the AUTOINCREMENT keyword, the database will use the next available largest integer as the primary key for the table if we leave it out of our INSERT statement:
 
-  CREATE TABLE Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar(30), description TEXT, max_grade INT);
+    CREATE TABLE Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar(30), description TEXT, max_grade INT);
 
 You'll have to "DROP TABLE Projects" before you can recreate the table.  WARNING: DROP TABLE will delete the table and all your data!  Run with care!
 
