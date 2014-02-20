@@ -29,7 +29,7 @@ CREATE TABLE Students (first_name varchar(30), last_name varchar(30), github var
 
 Right now, we've just created the table and it's empty. We need to **insert** data into it.
 ````sql
-    INSERT INTO Students (first_name, last_name, github) VALUES ("Charles", "Ruhland", "cruhland");
+INSERT INTO Students (first_name, last_name, github) VALUES ("Charles", "Ruhland", "cruhland");
 ````
 This inserts the first row into the table named 'Students', which we created above. Try inserting the second row yourself.
 
