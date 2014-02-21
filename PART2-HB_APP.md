@@ -28,7 +28,7 @@ The question mark is a placeholder. We'll use the same query over and over, each
 It's important, even though we only have a single value we're substituting into the query, the sqlite3 module demands we pack it into a tuple when we do the substitution.
 
 ### Step 3 -- Fetching Rows
-After we'e executed the query, we need to fetch rows out of the table one at a time. We can do that by calling the .fetchone method on line 9. This returns a row as a tuple:
+After we've executed the query, we need to fetch rows out of the table one at a time. We can do that by calling the .fetchone method on line 9. This returns a row as a tuple:
 
     row = DB.fetchone()
 
