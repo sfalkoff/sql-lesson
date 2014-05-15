@@ -35,47 +35,6 @@ As you write and test your code, make sure to run it inside a terminal that has 
 5. Deactivate your environment
 Just kidding, unless you're specifically going to activate another environment for a different project, don't worry about deactivating. Just open another window for that project.
 
-### Your Mission, Should You Choose To Accept It (You don't really have a choice here)
-There exists a python module named 'howdoi'. Importing it from inside a python program does nothing, but it _does_ install a useful program that can answer programming questions from the command line.
-
-First, verify that 'howdoi' is not installed on your machine:
-
-    Meringue:sql_lesson chriszf$ howdoi
-    -bash: /usr/local/bin/howdoi: No such file or directory
-
-Your task is to create a new virtual environment, use pip to install howdoi, and ask howdoi a programming question:
-
-    (env)Meringue:sql_lesson chriszf$ howdoi tweet using python
-    from Twython import Twython
-
-    TWITTER_APP_KEY = 'xxxxx' #supply the appropriate value
-    TWITTER_APP_KEY_SECRET = 'xxxxx' 
-    TWITTER_ACCESS_TOKEN = 'xxxxxx'
-    TWITTER_ACCESS_TOKEN_SECRET = 'xxxxx'
-
-    t = Twython(app_key=TWITTER_APP_KEY, 
-                app_secret=TWITTER_APP_KEY_SECRET, 
-                oauth_token=TWITTER_ACCESS_TOKEN, 
-                oauth_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
-
-    search = t.search(q='#omg',   #**supply whatever query you want here**
-                      count=100)
-
-    tweets = search['statuses']
-
-    for tweet in tweets:
-      print tweet['id_str'], '\n', tweet['text'], '\n\n\n'
-
-And this choice example:
-
-    (env)Meringue:sql_lesson chriszf$ howdoi create a virtualenv
-    pip freeze > env_modules.txt
-    virtualenv my_env && cd my_env && source bin/activate
-    pip install -r ../env_modules.txt
-
-The details of creating a virtual environment, activating it and installing a module with pip are left as an exercise to the reader. (Hint: look up what && does in bash then re-read the above example).
-
-Once you can install modules as you please, activate your virtual environment then install the flask module using pip.
 
 Sipping From the Flask
 ======================
