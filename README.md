@@ -258,3 +258,5 @@ Now, we can use ReportCardView as if it were a regular table.
     SELECT * from ReportCardView;
 
 Play around with selecting and joining different data in your tables, and coming up with different views.
+
+Once you finish this part, open up [part 2](https://github.com/hackbrightacademy/sql_lesson/blob/master/PART2-HB_APP.md)
