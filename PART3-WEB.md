@@ -180,7 +180,7 @@ Now try accessing your application with the following url, changing the github a
 ### Mad Libs Time
 Remember mad libs? Give me a noun, an adjective, a plural noun and a verb. This next part is a _lot_ like that. First, some setup.
 
-In our current directory, an ls command should produce the following:
+In our current directory, running `ls` should produce the following:
 
     env/
     webapp.py
