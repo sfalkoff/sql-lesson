@@ -231,7 +231,7 @@ Moving to webapp.py, we need to collect call get\_student\_by\_github to get the
     @app.route("/student")
     def get_student():
         hackbright_app.connect_to_db()
-        student_github = request.args.get("github")
+        student_github = request.args.get("student")
         row = hackbright_app.get_student_by_github(student_github)
         html = render_template("student_info.html", first_name=row[0],
                                                     last_name=row[1],
@@ -254,6 +254,9 @@ This is pretty important. Once you're satisfied with the way the data gets fille
     </html>
 
 Behold your majesty at http://localhost:5000/student?github=chriszf
+
+Was it majestic or did you get an error?  See if you can figure out why.  Hint: Pay close attention to how your arguments are being passed from the web browser's request through your program.
+
 
 ### User Input Revisited
 Now we have a webapp, _done_.
