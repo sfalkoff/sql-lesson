@@ -2,7 +2,7 @@ Connecting Python to SQL
 ========================
 To integrate with Python, we need to use the sqlite3 module to connect to our database. It behaves very similarly to interfaces for other SQL implementations, so it is a good starting point.
 
-Open up hackbright\_app.py. Inside, you'll find a partial implementation of a database-backed application built off the database we built earlier.
+Open up hackbright.py. Inside, you'll find a partial implementation of a database-backed application built off the database we built earlier.
 
 Code Walkthrough
 ----------------
@@ -17,7 +17,7 @@ On line 16, you can see how a connection is made:
     DB = CONN.cursor()
 
 ### Step 2 -- Executing a Query
-Given a cursor, we can use it to execute a query. On line 7, we can see the query we want to execute. A few things to notice, we don't need a semicolon when we execute a query string. Also, where we would normally have a filter for our where clause, we have a question mark.
+Given a cursor, we can use it to execute a query. On line 7, we can see the query we want to execute. A few things to notice: we don't need a semicolon when we execute a query string. Also, where we would normally have a filter for our where clause, we have a question mark.
 
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
 
@@ -25,7 +25,7 @@ The question mark is a placeholder. We'll use the same query over and over, each
 
     DB.execute(query, (github,))
 
-It's important, even though we only have a single value we're substituting into the query, the sqlite3 module demands we pack it into a tuple when we do the substitution.
+Even though we only have a single value we're substituting into the query, the sqlite3 module demands we pack it into a tuple when we do the substitution.
 
 ### Step 3 -- Fetching Rows
 After we've executed the query, we need to fetch rows out of the table one at a time. We can do that by calling the .fetchone method on line 9. This returns a row as a tuple:
@@ -36,7 +36,7 @@ The tuple contains the values for each of the columns we selected:
 
     # Example
     print row
-    ("Christian", "Fernandez", "chriszf")
+    ("Jane", "Hacker", "jhacks")
 
 ### Step 4 -- Cleanup
 Like files, we have to close our connection to our database when we're done. On quitting, we call the close method on the connection. Here, we do that on line 33:
@@ -50,7 +50,7 @@ Now that we can query for data, we need to be able to add more data to the syste
 ### Step 1 -- Adding a new command
 First, we'll add another command to our system by modifying our if statement in our main loop. The syntax for our 'new student' command will be as follows:
 
-    HBA Database> new_student Bartholomew MacGillicuddy bartmac
+    HBA Database> new_student Willhelmina Shakespeare realshakes
 
 To do this, change the if statement at line 28 to read:
 
@@ -73,7 +73,7 @@ At this point, we've sent our data to the database, but it's not yet 100% persis
         CONN.commit()
         print "Successfully added student: %s %s"%(first_name, last_name)
 
-Much like github, this says to sqlite, yes, we're happy with our data, save it forever. Notice that we are committing on the database connection, and not the cursor.
+Much like github, this says to sqlite, 'yes, we're happy with our data, save it forever.' Notice that we are committing on the database connection, and not the cursor.
 
 Expansion
 ---------
