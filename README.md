@@ -18,8 +18,8 @@ The first thing we need to do is be able to store our students. To do that, we c
     Table "Students"
     first_name | last_name | github
     -----------+-----------+----------
-    Charles    | Ruhland   | cruhland
-    Christian  | Fernandez | chriszf
+    Jane       | Hacker    | jhacks
+    Sarah      | Developer | sdevelops
 
 We define a table by declaring what the names of the columns are and what data type we can put into them. SQL data types largely map directly to standard Python data types. Here, the python 'string' datatype maps to the sql 'varchar' datatype. One quirk here is that we have to say explicitly up front the maximum length of every string we'll ever use. This is hard to predict, but it's harder to expand the field later to allow bigger strings, so we pick a reasonable, oversized default. Enter the following command in your sqlite console to create the table:
 
@@ -29,13 +29,13 @@ CREATE TABLE Students (first_name varchar(30), last_name varchar(30), github var
 
 Right now, we've just created the table and it's empty. We need to **insert** data into it.
 ````sql
-INSERT INTO Students (first_name, last_name, github) VALUES ("Charles", "Ruhland", "cruhland");
+INSERT INTO Students (first_name, last_name, github) VALUES ("Jane", "Hacker", "jhacks");
 ````
 This inserts the first row into the table named 'Students', which we created above. Try inserting the second row yourself.
 
 If the VALUES in your insert statement exactly match the order and number of columns in the table definition, we can be lazy and leave that section off:
 
-    INSERT INTO Students VALUES ("Charles", "Ruhland", "cruhland");
+    INSERT INTO Students VALUES ("Jane", "Hacker", "jhacks");
 
 
 Step 2: Getting our data back
@@ -54,17 +54,17 @@ We can also select multiple columns in any order:
 
     SELECT github, first_name FROM Students;
 
-You can also select which rows you want. We use a 'WHERE' clause. For example, if we want all of the data for 'Christian', we can do the following:
+You can also select which rows you want. We use a 'WHERE' clause. For example, if we want all of the data for 'Sarah', we can do the following:
 
-    SELECT * FROM Students WHERE first_name="Christian";
+    SELECT * FROM Students WHERE first_name="Sarah";
 
 We can filter on any value in our table. The following command gives the same search result:
 
-    SELECT * FROM Students WHERE github="chriszf";
+    SELECT * FROM Students WHERE github="sdevelops";
 
 Now, we can combine the two concepts to get specific combinations of rows and columns out of our table:
 
-    SELECT first_name, last_name FROM Students WHERE github="cruhland";
+    SELECT first_name, last_name FROM Students WHERE github="jhacks";
 
 Before continuing on, insert your own rows into the table, and try selecting different rows and columns from your new data.
 
@@ -73,10 +73,10 @@ Step 3: The project table
 Now, we need a table to store all the projects that the students will be doing. One important note here is that this table does not tell us which student did which project. It is simply a record of all the projects that everyone _can_ do.
 
     Table "Projects"
-    title  | description                                   | max_grade
+    title   | description                                   | max_grade
     -------------------------------------------------------------------
-    Markov | Tweets generated from Markov chains           | 50
-    Pyglet | Object-oriented game programming using Pyglet | 100 
+    Markov  | Tweets generated from Markov chains           | 50
+    Blockly | Programmatic Logic Puzzle Game                | 10
 
 We'll create a table as before, with the following command:
 
@@ -85,7 +85,7 @@ We'll create a table as before, with the following command:
 And again, we'll populate the table with some data with the 'INSERT' command:
 
     INSERT INTO Projects (title, description, max_grade) VALUES ("Markov", "Tweets generated from Markov chains", 50);
-    INSERT INTO Projects (title, description, max_grade) VALUES ("Pyglet", "Object-oriented game programming using Pyglet", 100);
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Blockly", "Programmatic Logic Puzzle Game", 10);
 
 
 Step 3b: Primary Keys
@@ -98,9 +98,9 @@ Now run your SELECT to look at the Projects table.  Oh no!  A duplicate entry ha
 
 No problem, we'll just delete that extra project.  DELETE works just like a SELECT, but without the column names.  The FROM and WHERE clauses are the same.  In fact, it's good practice to run a SELECT to see what rows your query matches before we run the delete.  
 
-Ok, so we just need to write a SELECT statement to find our extra row.  How the heck do we do that?  The data is the same in both rows.  Hmmm... badness.  If only we had a way to uniquly identify each row of our table.   It'd also be nice if the database would prevent us from duplicating ourselves.  Lucky for us, databases can do this with something called PRIMARY KEYs.
+Ok, so we just need to write a SELECT statement to find our extra row.  How the heck do we do that?  The data is the same in both rows.  Hmmm... badness.  If only we had a way to uniquely identify each row of our table.   It'd also be nice if the database would prevent us from duplicating ourselves.  Lucky for us, databases can do this with something called PRIMARY KEYs.
 
-If we identify a column in our table as a PRIMARY KEY column, the database will make sure that any data entered into this column is unqiue across all the rows of the table.  Numbers make really good primary keys and we can even let the database handle creating the keys for us.  If we add the AUTOINCREMENT keyword, the database will use the next available largest integer as the primary key for the table if we leave it out of our INSERT statement:
+If we identify a column in our table as a PRIMARY KEY column, the database will make sure that any data entered into this column is unique across all the rows of the table.  Numbers make really good primary keys and we can even let the database handle creating the keys for us.  If we add the AUTOINCREMENT keyword, the database will use the next available largest integer as the primary key for the table if we leave it out of our INSERT statement:
 
     CREATE TABLE Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, title varchar(30), description TEXT, max_grade INT);
 
@@ -109,7 +109,7 @@ You'll have to "DROP TABLE Projects" before you can recreate the table.  WARNING
 Now run the INSERTs again (leave off the new id column) and see what happens.
 
     INSERT INTO Projects (title, description, max_grade) VALUES ("Markov", "Tweets generated from Markov chains", 50);
-    INSERT INTO Projects (title, description, max_grade) VALUES ("Pyglet", "Object-oriented game programming using Pyglet", 100);
+    INSERT INTO Projects (title, description, max_grade) VALUES ("Blockly", "Programmatic Logic Puzzle Game", 10);
 
 Now SELECT from the table and notice that each row has been assigned an id.
 
@@ -124,7 +124,7 @@ Now that we have numeric data in the table, we can do more interesting things wi
 
 Additionally, we can compose WHERE clauses together, joined with the 'OR' and 'AND' operators. This next line selects the title, and maximum possible grade from our project list where the maximum grade is between 50 and 100:
 
-    SELECT title, max_grade FROM Projects WHERE max_grade > 50 AND max_grade < 100;
+    SELECT title, max_grade FROM Projects WHERE max_grade < 10 AND max_grade < 60;
 
 This next statement selects all the projects where the maximum grade is less than 25 or more than 75, but not in between:
 
@@ -149,22 +149,22 @@ We have two tables, 'Students' and 'Projects', and so far they are completely un
     Table 'Grades'
     student_github  | project_title | grade
     ---------------------------------------
-    chriszf         | Markov        | 10
-    chriszf         | Pyglet        | 2 
-    cruhland        | Markov        | 50
-    cruhland        | Pyglet        | 100
+    jhacks          | Markov        | 10
+    jhacks          | Blockly       | 2 
+    sdevelops       | Markov        | 50
+    sdevelops       | Blockly       | 100
 
 Construct the CREATE TABLE statement on your own, using the previous examples as a template. The 'student\_github' column should be the same size and type as the 'github' column in the 'Students' table. The 'project\_title' should similarly matched to the 'title' column in the 'Projects' table.
 
 ** Create the table before moving on **
 
-Reading this table, we can see that the student with the github account 'chriszf' has completed the project with the title 'Markov' for a total grade of 10. He has also completed the project entitled 'Pyglet' for a measly two points.
+Reading this table, we can see that the student with the github account 'jhacks' has completed the project with the title 'Markov' for a total grade of 10. She has also completed the project entitled 'Blockly' for a measly two points.
 
-The student with the github account 'cruhland' on the other hand, is doing much better with his projects, scoring 50 and 100 on each.
+The student with the github account 'sdevelops' on the other hand, is doing much better with her projects, scoring 50 and 100 on each.
 
 The command to insert the first row is written as such:
 
-    INSERT INTO Grades VALUES ("chriszf", "Markov", 10);
+    INSERT INTO Grades VALUES ("jhacks", "Markov", 10);
 
 Before moving on, insert the remaining rows into the Grades table, as well as adding some of your own.
 
@@ -177,18 +177,18 @@ If we wanted to find the first name, last name, project title, and project grade
     The data we want:
     first_name | last_name | project_title | grade | max_grade
     ----------------------------------------------------------
-    Christian  | Fernandez | Markov        | 10    | 50
-    Christian  | Fernandez | Pyglet        | 2     | 100 
+    Jane       | Hacker    | Markov        | 10    | 50
+    Jane       | Hacker    | Blockly       | 2     | 100 
 
 We'll build this query in pieces. First, we'll select the first\_name and last\_name out of the students table.
 
-    SELECT first_name, last_name FROM Students WHERE github = "chriszf";
+    SELECT first_name, last_name FROM Students WHERE github = "jhacks";
 
 We'll call this **Query 1**.
 
 Next, we'll select the grade, project and github for a student from the 'Grades' table.
 
-    SELECT project_title, grade FROM Grades WHERE student_github = "chriszf";
+    SELECT project_title, grade FROM Grades WHERE student_github = "jhacks";
 
 This is **Query 2**.
 
@@ -214,20 +214,20 @@ Adding that restriction in, our query is getting hard to read, so we can split i
     INNER JOIN Grades ON (Students.github = Grades.student_github);
 
 
-Next, we want to get the max\_grade out of the Projects table, as in Query 3. Again, we can stack joins on top of each other. In this case, the common data is in the 'title' column in the Projects table, and needs to be joined on the 'project\_title' column in the Grades table. First, we select everything to make sure it all lines up:
+Next, we want to get the max\_grade out of the Projects table, as in Query 3. Again, we can stack joins on top of each other. In this case, the common data is in the 'title' column in the Projects table, and it needs to be joined on the 'project\_title' column in the Grades table. First, we select everything to make sure it all lines up:
 
     SELECT *
     FROM Students
     INNER JOIN Grades ON (Students.github = Grades.student_github)
     INNER JOIN Projects ON (Grades.project_title = Projects.title);
 
-We can add in a WHERE clause to show only the lines for the student with the github 'chriszf':
+We can add in a WHERE clause to show only the lines for the student with the github 'jhacks':
 
     SELECT *
     FROM Students
     INNER JOIN Grades ON (Students.github = Grades.student_github)
     INNER JOIN Projects ON (Grades.project_title = Projects.title)
-    WHERE github = "chriszf";
+    WHERE github = "jhacks";
 
 Now that everything looks good, we once again filter down to only the columns we want. For the final step, write the query that selects only the columns that match our example table above:
 
