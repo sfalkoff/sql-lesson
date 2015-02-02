@@ -12,9 +12,7 @@ It is of interest to note that our program is written as if it is stateless. Our
 
 But First, A Detour Into VirtualEnv
 -----------------------------------
-Until now, we have not spent any time concerning ourselves with our 'environment'. On our machines, the appropriate version of python is already installed, we need only type the word to invoke it. Additionally, whenever we need a module, most of the time we can safely import it without question, as our machines have been prepared for these eventualities.
-
-The thing is, even though it may seem like it, our computers are not our own. Modern unix-based operating systems are multi-user systems, which means multiple users can be logged in at the same time. In fact, every time you open a new terminal window, you're essentially logging in again, once in each terminal.
+We previously learned how to invoke a virtual environment--now is a great time to review the process and the necessity of compartmentalizing your installations for a given application build. 
 
 Given that there may be a multitude of users logged onto your system (over the network, most likely), we must generally be careful not to clobber other users' programs and settings. If you install python3 in a multi-user setting, you'll likely anger those who rely on python2.7.
 
@@ -22,7 +20,7 @@ In practice, the only other 'user' you need to worry about angering is your oper
 
 Enter the virtual environment. Essentially, a virtualenv is a python sandbox. It gives you, the user, a way to cordon off whichever version of python you want to use along with whatever modules you need. This virtual environment is specific to you, and there's no need to ask permission of the operating system (or the super user) to install new modules.
 
-Here are the steps to using virtual environments:
+Here is a short reminder of the process:
 
 1. Figure out how to create an environment. [Here's a hint](http://lmgtfy.com/?q=create+virtual+environment)
 This basically creates a copy of python and all of the essential modules and puts it in a directory of your choice. Creation of a virtual environment is _free_. This means you should make as many as you need, usually one per project. Each of your projects will have different requirements, so don't be stingy and try to use one env for all of them. The directory you put your environment in is usually named 'env' under the top level of your project.
@@ -32,17 +30,14 @@ Once an environment is created, you need to activate it. Unless you activate an 
 Even if you don't appreciate the utility of being able to cordon off your python configuration, at the very least, you'll now enjoy the ability to install modules without having to ask for permission. Once your environment is activated, you can install new python modules with impunity. Note: impunity is not the name of the python module installer, that program is actually called pip.
 4. Work!
 As you write and test your code, make sure to run it inside a terminal that has a virtualenv activated. It is very easy to forget this. If your program raises an ImportError when running, you're probably not inside the activated environment. When you activate an environment, it leaves a visual cue on your command prompt, make sure to check for it if things aren't going correctly.
-5. Deactivate your environment
-Just kidding, unless you're specifically going to activate another environment for a different project, don't worry about deactivating. Just open another window for that project.
+5. Deactivate your environment with the 'deactivate env' command. 
 
 
 Sipping From the Flask
 ======================
-For us to have a web application, we must first have a web server. Writing such a thing for every web application would be pure tedium and requires more than a modicum of specific knowledge about HTTP, so we leave it to the experts. Instead, we use something called a framework. A framework forces us into writing programs in a style different from what we've written before, so we'll look at that briefly.
+For us to have a web application, we must first have a web server. Writing such a thing for every web application would be pure tedium and requires more than a modicum of specific knowledge about HTTP, so we leave it to the experts. Instead, we use something called a framework. That's where flask comes in!
 
-So far, our programs have been 'imperative'. They have been a sequence of commands to be executed, one after the other. With enough time, all of them can be traced through the source, by which I mean we, as humans, can interpret the program, one line at a time, and enumerate all the functions that are called, and draw out a map of what happens.
-
-With Flask, we do something different. We activate the framework, which is essentially a web server. Before we run it, we create a few functions, and we install the functions as 'handlers' for specific events.
+We activate the framework to create our web server. Before we run it, we create a few functions, and we install the functions as 'handlers' for specific events.
 
 First, let's see what happens when you run the framework without setting up handlers.
 
@@ -57,7 +52,7 @@ Put the following lines into a file named webapp.py, then run it, making sure yo
 
 You should see the following:
 
-    Meringue:sql_lesson chriszf$ python webapp.py 
+    Meringue:sql_lesson rhythm$ python webapp.py 
      * Running on http://127.0.0.1:5000/
 
 If you try to access the webapp in your browser by going to http://127.0.0.1:5000/ or its alias, http://localhost:5000/, you will get nothing but 404 errors, indicating the url is not found. Before we can respond to any urls, we must first set up our event handlers.
@@ -83,7 +78,7 @@ First, we'll make the standard 'hello world' program, but output the results in 
 If your app is still running in your terminal, kill it and restart it, then access http://localhost:5000/ in your browser. Tadaa, we're done.
 
 ### We're Not Done
-Let's look at our hello world handler a little more closely.
+Let's look at our 'hello world' handler a little more closely.
 
     @app.route("/")
     def helloworld():
@@ -108,7 +103,7 @@ To talk to the user's browser, our program and the browser need to be able to sp
 
 
 ### Wiring Up Our Database
-Let's take a copy of our hackbright\_app.py file and put it in the same directory as our webapp.py. Take a moment to find a completed version. (There's probably a copy on your local machine, go ahead and use it, even if it's from another student. The 'find -n' command is helpful here.)
+Let's take a copy of our hackbright.py file and put it in the same directory as our webapp.py. Take a moment to find a completed version. (There's probably a copy on your local machine, go ahead and use it, even if it's from another student. The 'find -n' command is helpful here.)
 
 In it, we should have a function that looks like the following:
 
@@ -134,13 +129,13 @@ Since this function returns a string, we can now use it in our handler. Back in 
 
     @app.route("/")
     def get_student():
-        hackbright_app.connect_to_db()
-        student_github = "chriszf" # Change this as appropriate
-        return hackbright_app.get_student_by_github(student_github)
+        hackbright.connect_to_db()
+        student_github = "jhacks" # Change this as appropriate
+        return hackbright.get_student_by_github(student_github)
 
-We're going to use functions out of our hackbright\_app file, so we'll need to import it at the top:
+We're going to use functions out of our hackbright file, so we'll need to import it at the top:
 
-    import hackbright_app
+    import hackbright
 
 Kill your server and restart it if it's still running, then reload your browser. You should see student data showing up.
 
@@ -151,7 +146,7 @@ We now have a database-backed web application, that's all there is to it.
 
 Okay, fine.
 
-We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called the 'request arguments'. Are they called the request arguments? Whatever.
+We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called 'request arguments'. Are they called the request arguments? Whatever.
 
 The request arguments are a set of key/value pairs that the user can send to the web server on the other end via the url. An example url with request arguments would look like this:
 
@@ -166,13 +161,13 @@ We'll use this to collect the student's github username from the user. The reque
 
     @app.route("/")
     def get_student():
-        hackbright_app.connect_to_db()
+        hackbright.connect_to_db()
         student_github = request.args.get("student")
-        return hackbright_app.get_student_by_github(student_github)
+        return hackbright.get_student_by_github(student_github)
 
 Now try accessing your application with the following url, changing the github account as appropriate:
 
-    http://localhost:5000/?student=chriszf
+    http://localhost:5000/?student=jhacks
 
 [Jawesome.](http://en.wikipedia.org/wiki/Street_Sharks)
 
@@ -184,7 +179,7 @@ In our current directory, running `ls` should produce the following:
 
     env/
     webapp.py
-    hackbright_app.py
+    hackbright.py
 
 We need to add a two more directories, one named 'static' and one named 'templates'. Do that now. Your directory should look like this:
 
@@ -192,7 +187,7 @@ We need to add a two more directories, one named 'static' and one named 'templat
     static/
     templates/
     webapp.py
-    hackbright_app.py
+    hackbright.py
 
 Now, we make a mad lib. Remember, a mad lib is basically a template with a series of spaces for you to fill in with context free words.
 
@@ -216,9 +211,9 @@ In our html file, we make the following change:
     Student: {{first_name}} {{last_name}}
     Github account: {{github}}
 
-Save your file, then we'll make changes in hackbright\_app.py, then webapp.py.
+Save your file, then we'll make changes in hackbright.py, then webapp.py.
 
-In hackbright\_app.get\_student\_by\_github, we return a string containing the formatted student data. We now have a template, so instead of returning the string, we'll return the pieces of data we need to fill our template. Modify the function so that it simply returns the row:
+In hackbright.get\_student\_by\_github, we return a string containing the formatted student data. We now have a template, so instead of returning the string, we'll return the pieces of data we need to fill our template. Modify the function so that it simply returns the row:
 
     def get_student_by_github(github):
         query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
@@ -230,9 +225,9 @@ Moving to webapp.py, we need to collect call get\_student\_by\_github to get the
 
     @app.route("/student")
     def get_student():
-        hackbright_app.connect_to_db()
+        hackbright.connect_to_db()
         student_github = request.args.get("student")
-        row = hackbright_app.get_student_by_github(student_github)
+        row = hackbright.get_student_by_github(student_github)
         html = render_template("student_info.html", first_name=row[0],
                                                     last_name=row[1],
                                                     github=row[2])
@@ -253,7 +248,7 @@ This is pretty important. Once you're satisfied with the way the data gets fille
     </body>
     </html>
 
-Behold your majesty at http://localhost:5000/student?github=chriszf
+Behold your majesty at http://localhost:5000/student?github=jhacks
 
 Was it majestic or did you get an error?  See if you can figure out why.  Hint: Pay close attention to how your arguments are being passed from the web browser's request through your program.
 
@@ -303,7 +298,7 @@ This html tag displays a text field for the user to type in. The 'name' attribut
 
 If you were being observant, you would have noticed that the first time you submitted, everything _worked_. We now have a webapp, a proper one even. It's a little bit duct-taped together, but it's still complete. It displays a form to a user, collects data, processes the submitted form, then displays the result.
 
-Furthermore, now we have a context we can use to talk about _all_ webapps ever. Every webapp is a series of page-pairs. One for displaying a form, and one for processing it. These pages all link to each other with standard 'a' tags, and all of those links give the illusion of having a single cohesive application. Sometimes multiple forms show up on the same page, and sometimes two different forms end up getting processed in the same way, but the principle still stands. If you think of webapps as a series of forms, you can decompose and reconstruct pretty much any webapp in existence. Yes, even facebook.
+Furthermore, now we have a context we can use to talk about _all_ webapps ever. Every webapp is a series of page-pairs. One for displaying a form, and one for processing it. These pages all link to each other with standard 'a' tags, and all of those links give the illusion of having a single cohesive application. Sometimes multiple forms show up on the same page, and sometimes two different forms end up getting processed in the same way, but the principle still stands. If you think of webapps as a series of forms, you can decompose and reconstruct pretty much any webapp in existence. Yes, even Facebook.
 
 ### What Now?
 Well, our app works, but it's pretty brittle. If you leave the form empty and submit, it breaks. If you enter a user who's not in the database, it breaks. Basically if you look at it funny, it breaks. That's okay, because flask gives us a bunch of tools to make our apps significantly more robust. We're not going to worry about them here, right now we're going to focus on the general layout of our app and the integration of HTML and Python.
