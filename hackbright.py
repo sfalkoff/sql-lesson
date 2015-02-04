@@ -29,6 +29,16 @@ def get_student_grade_by_project(project_title):
     Project: %s
     Grade: %s""" %(row[0], row[1], row[2])
 
+def student_grades(student_github):
+    query ="""SELECT student_github, project_title, grade FROM Grades WHERE student_github = ?"""
+    DB.execute(query, (student_github,))
+    row = DB.fetchall()
+    print "Student Github: %s" %row[0][0]
+    for i in range(len(row)):
+        print """\
+        Project: %s, Grade: %s""" %(row[i][1], row[i][2])
+
+#TODO: write function to give students grades
 
 #TODO: add ability to pass multi-word descriptions
 def add_project(title, description, max_grade):
@@ -71,6 +81,8 @@ def main():
             add_project(*args)
         elif command == "get_grade":
             get_student_grade_by_project(*args)
+        elif command == "student_grades":
+            student_grades(*args)
 
     CONN.close()
 
