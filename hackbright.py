@@ -8,18 +8,29 @@ def get_student_by_github(github):
     DB.execute(query, (github,))
     row = DB.fetchone()
     print """\
-Student: %s %s
-Github account: %s"""%(row[0], row[1], row[2])
+    Student: %s %s
+    Github account: %s"""%(row[0], row[1], row[2])
 
 def get_project_by_title(title):
     query = """SELECT title, description, max_grade FROM Projects WHERE title = ?"""
     DB.execute(query, (title,))
     row = DB.fetchone()
     print """\
-Title: %s
-Description: %s
-Max Grade: %s"""%(row[0], row[1], row[2])
+    Title: %s
+    Description: %s
+    Max Grade: %s"""%(row[0], row[1], row[2])
 
+def get_student_grade_by_project(project_title):
+    query = """SELECT student_github, project_title, grade FROM Grades WHERE project_title = ?"""
+    DB.execute(query, (project_title,))
+    row = DB.fetchone()
+    print """\
+    Student GitHub: %s
+    Project: %s
+    Grade: %s""" %(row[0], row[1], row[2])
+
+
+#TODO: add ability to pass multi-word descriptions
 def add_project(title, description, max_grade):
     query = """INSERT INTO Projects (title, description, max_grade) VALUES (?,?,?)"""
     DB.execute(query, (title, description, max_grade))
@@ -58,6 +69,8 @@ def main():
             get_project_by_title(*args)
         elif command == "new_project":
             add_project(*args)
+        elif command == "get_grade":
+            get_student_grade_by_project(*args)
 
     CONN.close()
 
